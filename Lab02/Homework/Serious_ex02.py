@@ -8,11 +8,23 @@ connect = urlopen(url)
 
 html_content = urlopen(url).read().decode('utf-8')
 
-# soup = BeautifulSoup(html_content, 'html.parser')
-
-# section = soup.find('section', 'section chart-grid')
 
 # save html to file 2
-file = open('itunes.html','wb')
-file.writelines(connect)
-file.close()
+# file = open('itunes.html','wb')
+# file.writelines(connect)
+# file.close()
+
+soup = BeautifulSoup(html_content, 'html.parser')
+
+section = soup.find('table',{'id':"tableContent"})
+
+li_list = section.find_all('td')
+file_excel = []
+for li in li_list:
+    file_excel.append(
+        {
+            'song' : (li.h3.string),
+            'artist' : (li.h4.string)
+        }
+    )
+pyexcel.save_as(records=file_excel, dest_file_name="itunes.xlsx")
